@@ -19,26 +19,38 @@ def take_a_walk(num_steps,distance):
     y2 = 0
     x2 =0
     me = Point(200,200)
-    while me.y > (distance/2):
-        print("meow")
+    distance = distance / 2
+    distance = int(distance)
+    distance2 = Point(distance,distance)
+    status = distance_between_points(me, distance2)
+    print(f"starter status: {status}")
+
+    while status-200 < distance:
         direction = random.randint(1,4)
+        status = distance_between_points(me, distance2)
+        print(status-200)
+        print(distance)
         #1 = North, 2 = East, 3 = South, 4 = West
         if direction == 1:
             y1 += 5
-            print(me.y)
             me = Point(me.x, me.y+5)
-            line = Line(me, Point(me.x, me.y))
+            line = Line(me, Point(me.x, me.y+5))
             line.draw(win)
         elif direction == 2:
+            me = Point(me.x+5, me.y)
             line = Line(me, Point(me.x+5, me.y))
             line.draw(win)
         elif direction == 3:
+            me = Point(me.x, me.y-5)
             line = Line(me, Point(me.x, me.y-5))
             line.draw(win)
         else:
+            me = Point(me.x-5, me.y)
             line = Line(me, Point(me.x-5, me.y))
             line.draw(win)
+    print(me)
     print("finished!")
+    win.get_mouse()
 
 def take_walks(num_walks, distance):
     for walk in range(num_walks):

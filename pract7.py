@@ -213,6 +213,7 @@ def clickable_eye():
     while True:
         click = win.get_mouse()
         distance = distance_between_points(Point(200,200), click)
+        print(distance)
         if 60 < distance < 120:
             print("sclera")
         elif 30 < distance < 60:
@@ -221,7 +222,7 @@ def clickable_eye():
             print("pupil")
         else:
             break
-
+clickable_eye()
 # Question 6
 # def fahrenheit_to_celsius():
 #     fahrenheit = int(input("Enter temperature in Fahrenheit: "))
