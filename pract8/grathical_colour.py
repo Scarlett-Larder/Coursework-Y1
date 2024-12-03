@@ -13,7 +13,7 @@ def grathic(radius):
     circle = Circle(Point(200,200), radius)
     circle.draw(win)
 
-def take_a_walk(num_steps,distance):
+def take_a_walk(num_steps,distance,colour):
     me = Point(200,200)
     dif = distance_between_points(Point(200,200), me)
     while dif < distance:
@@ -23,24 +23,30 @@ def take_a_walk(num_steps,distance):
         if direction == 1:
             me = Point(me.x, me.y+5)
             line = Line(me, Point(me.x, me.y+5))
+            line.outline_colour = colour
             line.draw(win)
         elif direction == 2:
             me = Point(me.x+5, me.y)
             line = Line(me, Point(me.x+5, me.y))
+            line.outline_colour = colour
             line.draw(win)
         elif direction == 3:
             me = Point(me.x, me.y-5)
             line = Line(me, Point(me.x, me.y-5))
+            line.outline_colour = colour
             line.draw(win)
         else:
             me = Point(me.x-5, me.y)
             line = Line(me, Point(me.x-5, me.y))
+            line.outline_colour = colour
             line.draw(win)
     print("finished!")
 
 def take_walks(num_walks, distance):
+    colours = ["red", "blue", "green", "black"]
     for walk in range(num_walks):
-        take_a_walk(num_walks, distance)
+        color = colours[walk % len(colours)]
+        take_a_walk(num_walks, distance, color)
     else:
         pass
 
