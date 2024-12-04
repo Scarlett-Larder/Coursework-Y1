@@ -1,5 +1,6 @@
-from graphix import Window, Point, Circle, Line, Rectangle, \
-                    Polygon, Text, Entry
+import math
+from graphix import Window, Polygon
+
 
 #Question 1
 def display_date(day, month, year):
@@ -60,4 +61,19 @@ def unique_models(values):
     for top in topics:
         print(top)
 
-#Question 7
+#Question 8
+def distance_between_tuples(p1, p2):
+    distance = math.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
+    return(distance)
+
+#Question 9
+def count_characters():
+    characters = {}
+    word = input("Please enter your string: ")
+    for i in word:
+        if i in characters:
+            characters[i] += 1
+        else:
+            characters[i] = 1
+    for character, total in characters.items():
+        print(f"{total} occurrences of {character}")

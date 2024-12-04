@@ -1,15 +1,19 @@
-from graphix import Window, Point, Rectangle, Polygon
 import random
+from graphix import Window, Point, Rectangle, Polygon
+
 
 def main():
     door_colour, lights_on, num_houses = get_inputs()
     draw_street(door_colour, lights_on, num_houses)
 
-
 def get_inputs():
-    door_colour = input("Enter door colour: ")
+    door_colour = []
     lights_on = float(input("The probability of the lights being on (0 to 1): "))
     num_houses = int(input("Enter the number of houses on the street: "))
+    for i in range(num_houses):
+        colour = input(f"What colour would you like door {i} to be: ")
+        door_colour.append(colour)
+    print(door_colour)
     return door_colour, lights_on, num_houses
 
 
@@ -33,10 +37,11 @@ def draw_street(door_colour, lights_on, num_houses):
     win_width = 200 * num_houses
     win = Window("Street", win_width, 200)
     offset = 0
-    for _ in range(num_houses):
+    for i in range(num_houses):
         ran = random.random()
         lights_on = random.random() <= ran
-        draw_house(door_colour, lights_on, win, offset)
+        door_color = door_colour[i] 
+        draw_house(door_color, lights_on, win, offset)
         offset += 200
     win.get_mouse()
 
