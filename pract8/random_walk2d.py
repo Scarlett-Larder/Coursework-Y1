@@ -31,6 +31,7 @@ def print_expected_distance(average_steps):
     print("The expected number of steps away from the", end=" ")
     print(f"start point is {average_steps:0.2f}")
 
+
 def take_walks(num_walks, num_steps):
     total_steps = 0
     for walk in range(num_walks):
@@ -39,10 +40,12 @@ def take_walks(num_walks, num_steps):
         ahh = distance_between_points(Point(0,0),Point(x,y))
     return ahh
 
+
 def get_inputs():
     num_walks = int(input("How many random walks to take? "))
     num_steps = int(input("How many steps for each walk? "))
     return num_walks, num_steps
+
 
 def main():
     num_walks, num_steps = get_inputs()

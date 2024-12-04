@@ -5,10 +5,12 @@ def main():
     num_filps = get_inputs()
     heads,tails = simulate_flips(num_filps)
     display_results(heads,tails,num_filps)
-    
+
+
 def get_inputs():
     num_filps = int(input("Please enter your inputs: "))
     return num_filps
+
 
 def simulate_flips(num_filps):
     heads = 0
@@ -21,7 +23,9 @@ def simulate_flips(num_filps):
             tails += 1
     return heads, tails
 
+
 def display_results(heads,tails, num_flips):
     print(f"Heads: 0.{num_flips - heads} Tails: 0.{num_flips - tails}")
+
 
 main()

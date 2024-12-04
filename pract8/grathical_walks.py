@@ -5,13 +5,16 @@ from graphix import Window, Point, Circle, Line, Rectangle, \
 
 win = Window()
 
+
 def distance_between_points(p1, p2):
     distance = math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2)
     return(distance)
 
+
 def grathic(radius):
     circle = Circle(Point(200,200), radius)
     circle.draw(win)
+
 
 def take_a_walk(num_steps,distance):
     me = Point(200,200)
@@ -37,6 +40,7 @@ def take_a_walk(num_steps,distance):
             line = Line(me, Point(me.x-5, me.y))
             line.draw(win)
     print("finished!")
+#
 
 def take_walks(num_walks, distance):
     for walk in range(num_walks):
@@ -44,14 +48,17 @@ def take_walks(num_walks, distance):
     else:
         pass
 
+
 def get_inputs():
     distance = int(input("How far away should it be? (>200) "))
     num_walks = int(input("How many random walks to take? "))
     return num_walks, distance
 
+
 def main():    
     num_walks, distance = get_inputs()
     grathic(distance)
     take_walks(num_walks, distance)
+
 
 main()
