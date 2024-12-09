@@ -1,6 +1,6 @@
 """Grathix Module use"""
 from graphix import Window, Point, Rectangle, Text
-
+import time
 
 def draw_outline(win, point1, point2):
     rect = Rectangle(point1, point2)
@@ -105,6 +105,12 @@ def delete_patch_group(patch_objects):
     
 
 def edit_patchwork(colours, patch_dict, win):
+    key_to_direction = {
+        "Up": (0, -1),
+        "Down": (0, 1),
+        "Left": (-1, 0),
+        "Right": (1, 0)
+    }
     print("Your now in edit mode! Controls are as follows:")
     print("Select with your mouse what patch you'd like to edit")
     print("X - Deletes selected patch")
@@ -114,12 +120,14 @@ def edit_patchwork(colours, patch_dict, win):
         patch_x, patch_y = click.x // 100 * 100, click.y // 100 * 100
         out = draw_outline(win, Point(patch_x, patch_y), Point(patch_x+100, patch_y+100))
         key = win.get_key()
+        out.undraw()
         if key == "x":
             if (patch_x, patch_y) in patch_dict:
                 delete_patch_group(patch_dict[(patch_x, patch_y)])
                 patch_dict.pop((patch_x, patch_y))
                 out.undraw()
         elif key == "esc":
+            click = None
             out.undraw()
         elif key == "1" or key == "2" or key == "3":
             if (patch_x, patch_y) in patch_dict:
@@ -127,33 +135,39 @@ def edit_patchwork(colours, patch_dict, win):
                 patch_dict.pop((patch_x, patch_y))
                 out.undraw()
                 colour_select = int(key) - 1
-                patch_2(win, Point(patch_x, patch_y), Point((patch_x+100), (patch_y+100)), colours[colour_select])
+                new_patch = patch_2(win, Point(patch_x, patch_y), Point((patch_x+100), (patch_y+100)), colours[colour_select])
+                patch_dict[(patch_x,patch_y)] = new_patch
         elif key == "4" or key == "5" or key == "6":
             if (patch_x, patch_y) in patch_dict:
                 delete_patch_group(patch_dict[(patch_x, patch_y)])
                 patch_dict.pop((patch_x, patch_y))
                 out.undraw()
                 colour_select = int(key) - 4
-                patch_1(win, Point(patch_x, patch_y), Point((patch_x+100), (patch_y+100)), colours[colour_select])
+                new_patch = patch_1(win, Point(patch_x, patch_y), Point((patch_x+100), (patch_y+100)), colours[colour_select])
+                patch_dict[(patch_x,patch_y)] = new_patch
         elif key == "7" or key == "8" or key == "9":
             if (patch_x, patch_y) in patch_dict:
                 delete_patch_group(patch_dict[(patch_x, patch_y)])
                 patch_dict.pop((patch_x, patch_y))
                 out.undraw()
                 colour_select = int(key) - 7
-                patch_plain(win, Point(patch_x, patch_y), Point((patch_x+100), (patch_y+100)), colours[colour_select])
-        elif key == "u":
-            print(f"{patch_x} {patch_y}")
-            if (patch_x, patch_y-100) in patch_dict:
+                new_patch = patch_plain(win, Point(patch_x, patch_y), Point((patch_x+100), (patch_y+100)), colours[colour_select])
+                patch_dict[(patch_x,patch_y)] = new_patch
+        elif key == "Up" or key == "Left" or key == "Right" or key == "Down":
+            move_cords = key_to_direction[key]
+            move_x = move_cords[0]
+            move_y = move_cords[1]
+            if (patch_x+(move_x*100), patch_y+(move_y*100)) in patch_dict:
                 print("Sorry buddy, no can do!")
             else:
-                for i in patch_dict[(patch_x,patch_y)]:
-                    i.move(0,-100)
-                patch_dict[(patch_x,patch_y-100)] = patch_dict[(patch_x,patch_y)]
-                
-
-
-            
+                for obj in patch_dict[(patch_x, patch_y)]:
+                    for _ in range(0, 100, 1):
+                        obj.move(move_x, move_y)
+                        time.sleep(0.00001)
+                store = patch_dict[(patch_x, patch_y)]
+                del patch_dict[(patch_x, patch_y)]
+                patch_dict[(patch_x+(move_x*100), patch_y+(move_y*100))] = store
+            out.undraw()
 
 def get_inputs():
     size = int(input("Please enter what size you'd like (5, 7, 9): "))
