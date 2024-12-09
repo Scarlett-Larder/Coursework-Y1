@@ -308,7 +308,7 @@ DEFAULT_CONFIG = {
     "arrow":"none",
     "text":"",
     "justify":"center",
-    "font": ("helvetica", 12, "normal")
+    "font": ("helvetica", 6, "normal")
 }
 
 class GraphixObject(ABC):
