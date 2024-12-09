@@ -159,7 +159,7 @@ def name_checker():
     print("wow correct")
 
 #Question 2
-def traffic_lights():
+def traffic_lights2():
     win = Window()
     red = Circle(Point(100, 50), 20)
     red.fill_colour = "red"

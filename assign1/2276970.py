@@ -1,1 +1,176 @@
-print("Hello!")
+"""Grathix Module use"""
+from graphix import Window, Point, Rectangle, Text
+
+
+def draw_outline(win, point1, point2):
+    rect = Rectangle(point1, point2)
+    rect.outline_colour = "black"
+    rect.outline_width = 5
+    rect.draw(win)
+    return rect
+
+def draw_rectangle(win, point1, point2, colour):
+    rect = Rectangle(point1, point2)
+    rect.fill_colour = colour
+    rect.draw(win)
+    return rect
+
+def patch_plain(win, tl, br, colour):
+    patch = []
+    rect = Rectangle(tl, br)
+    rect.fill_colour = colour
+    rect.draw(win)
+    patch.append(rect)
+    return patch
+
+def patch_2(win, tl, br, current_colour):
+    patch = []
+    colour_flip = True
+    h_flip = True
+    colour_store = current_colour
+    flipped_colour = ""
+    for Y in range(0,100,25):
+        h_flip = not h_flip
+        if Y >= 50:
+            colour_flip = False
+        for X in range(0,100,25):
+            if colour_flip is False:
+                current_colour = "white"
+                flipped_colour = colour_store
+            else:
+                current_colour = colour_store
+                flipped_colour = "white"
+            rect_1 = draw_rectangle(win, Point(tl.x+X,tl.y+Y), br, current_colour)
+            patch.append(rect_1)
+            if h_flip:
+                rect_2 = draw_rectangle(win, Point((tl.x+X)+5,(tl.y+Y)+25), Point((tl.x+X)+20,(tl.y+Y)+15), flipped_colour)
+                patch.append(rect_2)
+                rect_3 = draw_rectangle(win, Point((tl.x+X)+5,(tl.y+Y)), Point((tl.x+X)+20,(tl.y+Y)+10), flipped_colour)
+                patch.append(rect_3)
+            else:
+                rect_4 = draw_rectangle(win, Point((tl.x+X)+15,(tl.y+Y)+5), Point((tl.x+X)+25,(tl.y+Y)+20), flipped_colour)
+                patch.append(rect_4)
+                rect_5 = draw_rectangle(win, Point((tl.x+X),(tl.y+Y)+5), Point((tl.x+X)+10,(tl.y+Y)+20), flipped_colour)
+                patch.append(rect_5)
+            colour_flip = not colour_flip
+    return patch 
+
+def patch_1(win, tl, br, current_colour):
+    patch = []
+    for Y in range(0,100,20):
+        for X in range(0,100,20):
+            rect = Rectangle(Point(tl.x+X,tl.y+Y), br)
+            rect.outline_colour = current_colour
+            rect.draw(win)
+            patch.append(rect)
+            message = Text(Point(tl.x+(X+10),tl.y+(Y+10)), "Hi")
+            message.text_colour = current_colour
+            message.draw(win)
+            patch.append(message)
+    return patch
+
+def draw_patches(colours, size):
+    patch_dict = {}
+    window_size = size * 100
+    win = Window("Patch", window_size, window_size)
+    counter = 0
+    for Y in range(0, window_size, 100):
+        colour_count = True
+        for X in range(0, window_size, 100):
+            counter = counter + 1
+            colour_count = not colour_count
+            tl = Point(X,Y)
+            br = Point(X + 100, Y + 100)
+            if X > Y:
+                current_colour = colours[1]
+                if Y < 100 or X > window_size - 200:
+                    patch = patch_1(win, tl, br, current_colour)
+                else:
+                    patch = patch_plain(win, tl, br, current_colour)
+            else:
+                if colour_count:
+                    current_colour = colours[0]
+                else:
+                    current_colour = colours[2]
+                if X < 100 or Y > window_size - 200:
+                    patch = patch_plain(win, tl, br, current_colour)
+                else:
+                    patch = patch_2(win, tl, br, current_colour)
+            patch_dict[(X,Y)] = patch
+    return patch_dict, win
+
+def delete_patch_group(patch_objects):
+    for obj in patch_objects:
+        obj.undraw()
+    
+
+def edit_patchwork(colours, patch_dict, win):
+    print("Your now in edit mode! Controls are as follows:")
+    print("Select with your mouse what patch you'd like to edit")
+    print("X - Deletes selected patch")
+    print("1 - 'Hi! with colour 1, 2- with colour 2, 3 - colour 3")
+    while True:
+        click = win.get_mouse()
+        patch_x, patch_y = click.x // 100 * 100, click.y // 100 * 100
+        out = draw_outline(win, Point(patch_x, patch_y), Point(patch_x+100, patch_y+100))
+        key = win.get_key()
+        if key == "x":
+            if (patch_x, patch_y) in patch_dict:
+                delete_patch_group(patch_dict[(patch_x, patch_y)])
+                patch_dict.pop((patch_x, patch_y))
+                out.undraw()
+        elif key == "esc":
+            out.undraw()
+        elif key == "1" or key == "2" or key == "3":
+            if (patch_x, patch_y) in patch_dict:
+                delete_patch_group(patch_dict[(patch_x, patch_y)])
+                patch_dict.pop((patch_x, patch_y))
+                out.undraw()
+                colour_select = int(key) - 1
+                patch_2(win, Point(patch_x, patch_y), Point((patch_x+100), (patch_y+100)), colours[colour_select])
+        elif key == "4" or key == "5" or key == "6":
+            if (patch_x, patch_y) in patch_dict:
+                delete_patch_group(patch_dict[(patch_x, patch_y)])
+                patch_dict.pop((patch_x, patch_y))
+                out.undraw()
+                colour_select = int(key) - 4
+                patch_1(win, Point(patch_x, patch_y), Point((patch_x+100), (patch_y+100)), colours[colour_select])
+        elif key == "7" or key == "8" or key == "9":
+            if (patch_x, patch_y) in patch_dict:
+                delete_patch_group(patch_dict[(patch_x, patch_y)])
+                patch_dict.pop((patch_x, patch_y))
+                out.undraw()
+                colour_select = int(key) - 7
+                patch_plain(win, Point(patch_x, patch_y), Point((patch_x+100), (patch_y+100)), colours[colour_select])
+        elif key == "u":
+            print(f"{patch_x} {patch_y}")
+            if (patch_x, patch_y-100) in patch_dict:
+                print("Sorry buddy, no can do!")
+            else:
+                for i in patch_dict[(patch_x,patch_y)]:
+                    i.move(0,-100)
+                patch_dict[(patch_x,patch_y-100)] = patch_dict[(patch_x,patch_y)]
+                
+
+
+            
+
+def get_inputs():
+    size = int(input("Please enter what size you'd like (5, 7, 9): "))
+    colour_one = input("Colour 1: ")
+    colour_two = input("Colour 2: ")
+    colour_three = input("Colour 3: ")
+    colours = [colour_one, colour_two, colour_three]
+    edit = input("If you'd like to edit the patch after, please enter 'Y': ")
+    if edit == "Y":
+        edit = True
+    else: 
+        edit = False
+    return colours, size, edit
+
+def main():
+    colours, size, edit = get_inputs()
+    patch_dict, win = draw_patches(colours, size)
+    edit_patchwork(colours, patch_dict, win)
+
+main()
