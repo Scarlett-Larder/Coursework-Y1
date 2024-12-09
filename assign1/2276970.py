@@ -1,7 +1,7 @@
-"""Grathix Module use"""
-from graphix import Window, Point, Rectangle, Text
 import time
+from graphix import Window, Point, Rectangle, Text
 
+# Used for the edit function
 def draw_outline(win, point1, point2):
     rect = Rectangle(point1, point2)
     rect.outline_colour = "black"
@@ -23,6 +23,7 @@ def patch_plain(win, tl, br, colour):
     patch.append(rect)
     return patch
 
+#The H patch ()
 def patch_2(win, tl, br, current_colour):
     patch = []
     colour_flip = True
@@ -63,7 +64,7 @@ def patch_1(win, tl, br, current_colour):
             rect.outline_colour = current_colour
             rect.draw(win)
             patch.append(rect)
-            message = Text(Point(tl.x+(X+10),tl.y+(Y+10)), "Hi")
+            message = Text(Point(tl.x+(X+10),tl.y+(Y+10)), "Hi!")
             message.text_colour = current_colour
             message.draw(win)
             patch.append(message)
@@ -111,10 +112,17 @@ def edit_patchwork(colours, patch_dict, win):
         "Left": (-1, 0),
         "Right": (1, 0)
     }
-    print("Your now in edit mode! Controls are as follows:")
-    print("Select with your mouse what patch you'd like to edit")
-    print("X - Deletes selected patch")
-    print("1 - 'Hi! with colour 1, 2- with colour 2, 3 - colour 3")
+    print("""
+Your now in edit mode! Controls are as follows:
+    - Select with your mouse what patch you'd like to edit
+    - ESC | Deselect patch
+    - X | Delete selected patch
+    - 1,2,3 | Replace patch with a new H patch (1-Colour 1 etc)
+    - 4,5,6 | Replace patch with a new Hi! patch (4-Colour 1 etc)
+    - 7,8,9 | Replace patch with a new plain patch (8-Colour 1 etc)
+    - Arrow keys | Move patch to the direction selected. Requires
+    - the location to be empty!
+          """)
     while True:
         click = win.get_mouse()
         patch_x, patch_y = click.x // 100 * 100, click.y // 100 * 100
@@ -158,7 +166,7 @@ def edit_patchwork(colours, patch_dict, win):
             move_x = move_cords[0]
             move_y = move_cords[1]
             if (patch_x+(move_x*100), patch_y+(move_y*100)) in patch_dict:
-                print("Sorry buddy, no can do!")
+                print("Oops, its not empty there!")
             else:
                 for obj in patch_dict[(patch_x, patch_y)]:
                     for _ in range(0, 100, 1):
@@ -170,12 +178,19 @@ def edit_patchwork(colours, patch_dict, win):
             out.undraw()
 
 def get_inputs():
-    size = int(input("Please enter what size you'd like (5, 7, 9): "))
-    colour_one = input("Colour 1: ")
-    colour_two = input("Colour 2: ")
-    colour_three = input("Colour 3: ")
-    colours = [colour_one, colour_two, colour_three]
+    size_allowed = [5,7,9]
+    size = 0
+    while size not in size_allowed:
+        size = int(input(f"Please enter what size you'd like {size_allowed}: "))
+    colours = []
+    for i in range(3):
+        colour = input(f"Colour {i + 1}: ")
+        while colour in colours:
+            print("This colour is already in the list. Please choose a different colour.")
+            colour = input(f"Colour {i + 1}: ")
+        colours.append(colour)
     edit = input("If you'd like to edit the patch after, please enter 'Y': ")
+    edit = edit.capitalize()
     if edit == "Y":
         edit = True
     else: 
@@ -185,6 +200,7 @@ def get_inputs():
 def main():
     colours, size, edit = get_inputs()
     patch_dict, win = draw_patches(colours, size)
-    edit_patchwork(colours, patch_dict, win)
+    if edit:
+        edit_patchwork(colours, patch_dict, win)
 
 main()
