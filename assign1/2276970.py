@@ -267,3 +267,5 @@ def main():
     patch_dict, win = draw_patches(colours, size)
     if edit:
         edit_patchwork(colours, patch_dict, win)
+
+main()
