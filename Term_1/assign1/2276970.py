@@ -18,6 +18,7 @@ def draw_rectangle(win, point1, point2, colour):
     return rect
 
 
+# Plain patch
 def patch_plain(win, tl, br, colour):
     patch = []
     rect = Rectangle(tl, br)
@@ -27,7 +28,7 @@ def patch_plain(win, tl, br, colour):
     return patch
 
 
-# The H patch ()
+# The H patch (Penultimate: Patch 7)
 def patch_2(win, tl, br, current_colour):
     patch = []
     colour_flip = True
@@ -81,6 +82,7 @@ def patch_2(win, tl, br, current_colour):
     return patch
 
 
+# Hi! Patch (Final: Patch 0)
 def patch_1(win, tl, br, current_colour):
     patch = []
     for Y in range(0, 100, 20):
@@ -97,6 +99,7 @@ def patch_1(win, tl, br, current_colour):
 
 
 # Primary patchwork function. Window, patchwork organization (colour, what patches to call etc) is done here.
+# (Table: 9)
 def draw_patches(colours, size):
     patch_dict = {}
     window_size = size * 100
@@ -220,15 +223,11 @@ Your now in edit mode! Controls are as follows:
             if (patch_x + (move_x * 100), patch_y + (move_y * 100)) in patch_dict:
                 print("Oops, its not empty there!")
             else:
-                # For every object within the patch_dictionary, it'll be moved in the direction selected.
                 for obj in patch_dict[(patch_x, patch_y)]:
-                    # Within the range of 100, it'll move by 1, making the animation work with the sleep,
-                    # and the placement correct with the "key_to_direction" dictionary
                     for _ in range(0, 100, 1):
+                        #Moves using the key_to_direction cords 100 times
                         obj.move(move_x, move_y)
-                        time.sleep(0.00001)
-                # Stores the patch objects, deletes the dictionary entry, then re-enters it with the new
-                # location of the patch with all the objects with "store".
+                        time.sleep(0.0000001)
                 store = patch_dict[(patch_x, patch_y)]
                 del patch_dict[(patch_x, patch_y)]
                 patch_dict[(patch_x + (move_x * 100), patch_y + (move_y * 100))] = store
@@ -247,9 +246,9 @@ def get_inputs():
     print(f"Colour options: {', '.join(colours_allowed)}")
     for i in range(3):
         colour = input(f"Colour {i + 1}: ")
-        while colour in colours:
+        while colour in colours or colour not in colours_allowed:
             print(
-                "This colour is already in the list. Please choose a different colour."
+                "Error: The colour inputted is either already inputted, or is not allowed."
             )
             colour = input(f"Colour {i + 1}: ")
         colours.append(colour)
