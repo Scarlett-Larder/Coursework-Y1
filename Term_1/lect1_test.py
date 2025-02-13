@@ -1,4 +1,4 @@
-from graphix import Window, Point, Circle
+from Term_2.graphix import Window, Point, Circle
 
 win = Window()
 

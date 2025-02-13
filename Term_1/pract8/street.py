@@ -1,4 +1,4 @@
-from graphix import Window, Point, Rectangle, Polygon
+from Term_2.graphix import Window, Point, Rectangle, Polygon
 import random
 
 def main():
