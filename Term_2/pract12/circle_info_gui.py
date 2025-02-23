@@ -1,5 +1,6 @@
 from tkinter import Tk, Frame, Label, Entry, IntVar, Button, StringVar
 import math
+
 class CircleInfo:
 
     def __init__(self):
@@ -14,14 +15,21 @@ class CircleInfo:
 
         self.result1 = StringVar()
         self.result2 = StringVar()
-        self.result1.set("0")
-        self.result2.set("0")
+        self.result1.set("Area: 0")
+        self.result2.set("Circ: 0")
 
     def run(self):
         self.create_widgets()
         self.win.mainloop()
     
     def create_widgets(self):
+
+        label_num1 = Label(
+            self.main_frame,
+            text="Number 1: "
+        )
+        label_num1.pack()
+
         entry_num1 = Entry(
             self.main_frame,
             width=20,
@@ -43,20 +51,23 @@ class CircleInfo:
         )
         label_result2.pack()
 
-        button_calc = Button(
+        button_mult = Button(
             self.main_frame,
-            text="calc",
-            compand=self.calculate
+            text="Calc",
+            command=self.calculate
         )
-        button_calc.pack()
+        button_mult.pack(side="left")
     
     def calculate(self):
-        self.num1.get()
-        result1 = math.pi * self.num1 ** 2
-        result2 = 2 * math.pi * self.num1
+        print("Calculate!")
+
+        val = int(self.num1.get())
+        result1 = math.pi * val ** 2
+        result2 = 2 * math.pi * val
 
         self.result1.set(f"Area: {result1}")
         self.result2.set(f"Circ: {result2}")
+
 
 def main():
     calc = CircleInfo()
