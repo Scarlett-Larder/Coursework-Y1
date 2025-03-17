@@ -1,4 +1,5 @@
 from tkinter import Tk, Frame, Entry, Button, Label, StringVar, simpledialog
+import csv
 
 #Task 1
 class SmartPlug:
@@ -323,8 +324,9 @@ class SmartHomeApp():
             sticky="w"
         )
 
-        # Devices
-        for i in range(len(self.home.devices)):
+        # Device
+        for i, device in enumerate(self.home.devices):
+
             device = self.home.devices[i]
 
             if isinstance(device, SmartPlug):
@@ -476,6 +478,43 @@ class SmartHomesApp():
     def __init__(self):
         self.win = Tk()
         self.win.title("Smart Homes App")
+
+        self.win.protocol("WM_DELETE_WINDOW", self.before_close)
+
+        #open file
+        try:
+            with open("smart_homes_save.csv", "r") as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    home = SmartHome()
+                    for col in row:
+                        parts = col.split(",")
+                        device_type = int(parts[0])
+                        variable = parts[1]
+                        state = parts[2].strip().lower() == "true"
+
+                        if device_type == 0:
+                            plug = SmartPlug(int(variable))
+                            plug.switched_on = state
+                            home.add_device(plug)
+
+                        if device_type == 1:
+                            light = SmartLight()
+                            light.brightness = int(variable)
+                            light.switched_on = state
+                            home.add_device(light)
+                        
+                        if device_type == 2:
+                            wash = SmartWashingMachine()
+                            wash.brightness = variable
+                            wash.switched_on = state
+                            home.add_device(wash)
+
+
+                    self.homes.append(home)
+        except FileNotFoundError:
+            print("No file found. Cool!")
+
         self.main_frame = Frame(self.win)
         self.main_frame.grid(
             row=0,
@@ -518,7 +557,7 @@ class SmartHomesApp():
             sticky="w"
         )
 
-        for i in range(len(self.homes)):
+        for i, home in enumerate(self.homes):
             home = self.homes[i]
             home_devices = len(home.devices)
             home_devices_on = 0
@@ -577,6 +616,24 @@ class SmartHomesApp():
         for widget in self.main_frame.winfo_children():
             widget.destroy()
         self.create_widgets()
+
+    def before_close(self):
+        print("Saving changes...")
+        file_name = "smart_homes_save.csv"
+        with open(file_name, "w", newline="") as csvfile:
+            csvwriter = csv.writer(csvfile)
+            for home in self.homes:
+                home_data = []
+                for device in home.devices:
+                    if isinstance(device, SmartPlug):
+                        home_data.append(f"{0},{device.consumption_rate},{device.switched_on}")
+                    elif isinstance(device, SmartWashingMachine):
+                        home_data.append(f"{2},{device.wash_mode},{device.switched_on}")
+                    elif isinstance(device, SmartLight):
+                        home_data.append(f"{1},{device.brightness},{device.switched_on}")
+                csvwriter.writerow(home_data)
+
+        self.win.destroy()
 
 def test_smart_homes_app():
     start = SmartHomesApp()
