@@ -114,7 +114,7 @@ class SmartWashingMachine(SmartDevice):
 
 
 def test_custom_device():
-    #Test initalisation and default values
+    #Test initalisation and default valuess
     light1 = SmartLight()
     wash1 = SmartWashingMachine()
     print(light1)
