@@ -1,5 +1,7 @@
-from tkinter import Tk, Frame, Entry, Button, Label, StringVar, simpledialog
+from tkinter import Tk, Frame, Button, Label, simpledialog
 import csv
+
+#Task 1: 6-58, Task 2: 63-135, Task 3: 139-268
 
 #Task 1
 class SmartPlug:
@@ -146,7 +148,7 @@ class SmartHome():
         if len(self.devices) < self.max_items:
             self.devices.append(device)
         else:
-            print("No more devices can added \n")
+            print(f"No more devices can added (max {self.max_items})\n")
 
     def get_device(self, index):
         if 0 <= index < len(self.devices):
@@ -267,7 +269,7 @@ def test_smart_home():
 
 
 
-#Task 4 - 5
+#  - 5
 class SmartHomeApp():
     def __init__(self, home=None):
         self.home = home if home else SmartHome()
@@ -325,8 +327,9 @@ class SmartHomeApp():
         )
 
         # Device
+        i = 0
         for i, device in enumerate(self.home.devices):
-
+            
             device = self.home.devices[i]
 
             if isinstance(device, SmartPlug):
@@ -342,7 +345,10 @@ class SmartHomeApp():
                 device_variable = "Mode"
                 device_value = device.brightness
             else:
-                print("ERRORRRR")
+                device_name = ""
+                device_variable = ""
+                device_value = ""
+                print("ERROR: Invalid object. \n")
 
             status = "on" if device.switched_on else "off"
             device_label = Label(
@@ -440,7 +446,7 @@ class SmartHomeApp():
             self.home.update_option(index, value)
             self.refresh()
         else:
-            print("ERRORRRR")
+            print("ERROR: Invalid object \n")
     
     def add_device(self):
         device_choice = simpledialog.askstring("-", "What device? (Plug, Washing Machine, Light)")
@@ -515,7 +521,7 @@ class SmartHomesApp():
         except FileNotFoundError:
             print("No file found. Cool!")
 
-        self.main_frame = Frame(self.win)
+        self.main_frame = Frame(self.win)v
         self.main_frame.grid(
             row=0,
             column=0,
